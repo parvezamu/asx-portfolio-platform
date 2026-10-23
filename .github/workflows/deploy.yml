@@ -1,0 +1,60 @@
+name: deploy
+on:
+  workflow_run:
+    workflows: [ci]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # needed to request the OIDC token
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # only after a successful CI run on a push to main (or a manual run)
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-24.04
+    environment: production   # pauses here for your approval
+    env:
+      SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+      REGISTRY: ${{ vars.ACR }}.azurecr.io
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.SHA }}
+
+      - name: Azure login (OIDC, no secrets)
+        uses: azure/login@v3
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and push images
+        run: |
+          TAG="${SHA::12}"
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+          az acr login -n "${{ vars.ACR }}"
+          docker build -t "$REGISTRY/optimiser:$TAG" src/optimiser
+          docker build -t "$REGISTRY/api:$TAG" src/Api
+          docker push "$REGISTRY/optimiser:$TAG"
+          docker push "$REGISTRY/api:$TAG"
+
+      - name: Deploy to Container Apps
+        run: |
+          az extension add --name containerapp --upgrade -y --only-show-errors
+          az containerapp update -g "${{ vars.RG }}" -n asx-optimiser --image "$REGISTRY/optimiser:$TAG" -o none
+          az containerapp update -g "${{ vars.RG }}" -n asx-api --image "$REGISTRY/api:$TAG" -o none
+
+      - name: Smoke test live API
+        run: |
+          API_KEY=$(az keyvault secret show --vault-name "${{ vars.KV }}" -n api-key --query value -o tsv)
+          echo "::add-mask::$API_KEY"
+          FQDN=$(az containerapp show -g "${{ vars.RG }}" -n asx-api --query properties.configuration.ingress.fqdn -o tsv)
+          sleep 30
+          API_KEY="$API_KEY" ./tools/smoke_test.sh "https://$FQDN"
