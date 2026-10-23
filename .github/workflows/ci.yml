@@ -9,42 +9,42 @@ permissions:
 
 jobs:
   optimiser:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults: { run: { working-directory: src/optimiser } }
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with: { python-version: "3.12" }
       - run: pip install -r requirements-dev.txt
       - run: pytest -q tests                         # golden-test harness
       - run: pip-audit -r requirements.txt          # SCA
 
   api:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults: { run: { working-directory: src/Api } }
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
         with: { dotnet-version: "8.0.x" }
       - run: dotnet build -c Release
       - run: dotnet list package --vulnerable --include-transitive 2>&1 | tee vuln.txt; ! grep -q "has the following vulnerable packages" vuln.txt
 
   codeql:                                            # SAST
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy: { matrix: { language: [csharp, python] } }
     steps:
-      - uses: actions/checkout@v4
-      - uses: github/codeql-action/init@v3
+      - uses: actions/checkout@v7
+      - uses: github/codeql-action/init@v4
         with: { languages: "${{ matrix.language }}", build-mode: none }
-      - uses: github/codeql-action/analyze@v3
+      - uses: github/codeql-action/analyze@v4
 
   containers:                                        # image scan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [optimiser, api]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: docker build -t optimiser:ci src/optimiser
-      - uses: aquasecurity/trivy-action@0.28.0
+      - uses: aquasecurity/trivy-action@v0.36.0
         with: { image-ref: "optimiser:ci", severity: "CRITICAL,HIGH", exit-code: "1", ignore-unfixed: true }
 
   # Add later: deploy-staging -> OWASP ZAP baseline (DAST) -> deploy-prod with
