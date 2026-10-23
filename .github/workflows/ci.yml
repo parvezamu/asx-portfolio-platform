@@ -1,0 +1,51 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+  security-events: write   # CodeQL / Trivy SARIF upload
+
+jobs:
+  optimiser:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: src/optimiser } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements-dev.txt
+      - run: pytest -q tests                         # golden-test harness
+      - run: pip-audit -r requirements.txt          # SCA
+
+  api:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: src/Api } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: "8.0.x" }
+      - run: dotnet build -c Release
+      - run: dotnet list package --vulnerable --include-transitive 2>&1 | tee vuln.txt; ! grep -q "has the following vulnerable packages" vuln.txt
+
+  codeql:                                            # SAST
+    runs-on: ubuntu-latest
+    strategy: { matrix: { language: [csharp, python] } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with: { languages: "${{ matrix.language }}", build-mode: none }
+      - uses: github/codeql-action/analyze@v3
+
+  containers:                                        # image scan
+    runs-on: ubuntu-latest
+    needs: [optimiser, api]
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t optimiser:ci src/optimiser
+      - uses: aquasecurity/trivy-action@0.28.0
+        with: { image-ref: "optimiser:ci", severity: "CRITICAL,HIGH", exit-code: "1", ignore-unfixed: true }
+
+  # Add later: deploy-staging -> OWASP ZAP baseline (DAST) -> deploy-prod with
+  # a GitHub Environment "production" that requires manual reviewer approval.

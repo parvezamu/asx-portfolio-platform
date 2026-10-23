@@ -1,0 +1,9 @@
+.env
+bin/
+obj/
+__pycache__/
+.pytest_cache/
+data/raw/*.csv
+*.user
+.venv/
+*.pem

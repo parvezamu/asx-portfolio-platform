@@ -1,0 +1,101 @@
+ticker,company,sector
+A2M,a2 Milk,Consumer Staples
+AGL,AGL Energy,Utilities
+ALL,Aristocrat Leisure,Consumer Discretionary
+ALQ,ALS,Industrials
+ALU,Altium,Information Technology
+ALX,Atlas Arteria,Industrials
+AMC,Amcor,Materials
+AMP,AMP,Financials
+ANN,Ansell,Health Care
+ANZ,ANZ Bank,Financials
+APA,APA Group,Utilities
+APT,Afterpay,Information Technology
+AST,AusNet Services,Utilities
+ASX,ASX Ltd,Financials
+AWC,Alumina,Materials
+AZJ,Aurizon,Industrials
+BEN,Bendigo & Adelaide Bank,Financials
+BHP,BHP,Materials
+BLD,Boral,Materials
+BOQ,Bank of Queensland,Financials
+BPT,Beach Energy,Energy
+BSL,BlueScope Steel,Materials
+BXB,Brambles,Industrials
+CAR,carsales.com,Communication Services
+CBA,Commonwealth Bank,Financials
+CCL,Coca-Cola Amatil,Consumer Staples
+CGF,Challenger,Financials
+CHC,Charter Hall,Real Estate
+CIM,CIMIC,Industrials
+COH,Cochlear,Health Care
+COL,Coles,Consumer Staples
+CPU,Computershare,Information Technology
+CSL,CSL,Health Care
+CTX,Caltex,Energy
+CWN,Crown Resorts,Consumer Discretionary
+CWY,Cleanaway,Industrials
+DMP,Domino's Pizza,Consumer Discretionary
+DOW,Downer EDI,Industrials
+DXS,Dexus,Real Estate
+EVN,Evolution Mining,Materials
+FBU,Fletcher Building,Materials
+FLT,Flight Centre,Consumer Discretionary
+FMG,Fortescue,Materials
+FPH,Fisher & Paykel Healthcare,Health Care
+GMG,Goodman Group,Real Estate
+GOZ,Growthpoint,Real Estate
+GPT,GPT Group,Real Estate
+HVN,Harvey Norman,Consumer Discretionary
+IAG,IAG,Financials
+IEL,IDP Education,Consumer Discretionary
+ILU,Iluka,Materials
+IPL,Incitec Pivot,Materials
+JBH,JB Hi-Fi,Consumer Discretionary
+JHX,James Hardie,Materials
+LLC,Lendlease,Real Estate
+MFG,Magellan,Financials
+MGR,Mirvac,Real Estate
+MPL,Medibank,Financials
+MQG,Macquarie,Financials
+NAB,NAB,Financials
+NCM,Newcrest,Materials
+NST,Northern Star,Materials
+ORG,Origin Energy,Utilities
+ORI,Orica,Materials
+OSH,Oil Search,Energy
+QAN,Qantas,Industrials
+QBE,QBE Insurance,Financials
+QUB,Qube,Industrials
+REA,REA Group,Communication Services
+RHC,Ramsay Health Care,Health Care
+RIO,Rio Tinto,Materials
+RMD,ResMed,Health Care
+S32,South32,Materials
+SAR,Saracen Mineral,Materials
+SCG,Scentre,Real Estate
+SEK,Seek,Communication Services
+SGP,Stockland,Real Estate
+SGR,Star Entertainment,Consumer Discretionary
+SHL,Sonic Healthcare,Health Care
+SKI,Spark Infrastructure,Utilities
+SOL,Washington H. Soul Pattinson,Financials
+SPK,Spark New Zealand,Communication Services
+STO,Santos,Energy
+SUN,Suncorp,Financials
+SVW,Seven Group,Industrials
+SYD,Sydney Airport,Industrials
+TAH,Tabcorp,Consumer Discretionary
+TCL,Transurban,Industrials
+TLS,Telstra,Communication Services
+TPM,TPG Telecom,Communication Services
+TWE,Treasury Wine,Consumer Staples
+VCX,Vicinity Centres,Real Estate
+VEA,Viva Energy,Energy
+WBC,Westpac,Financials
+WES,Wesfarmers,Consumer Discretionary
+WOR,Worley,Energy
+WOW,Woolworths,Consumer Staples
+WPL,Woodside,Energy
+WTC,WiseTech,Information Technology
+XRO,Xero,Information Technology
